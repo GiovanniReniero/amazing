@@ -1,15 +1,19 @@
-const {Engine, World, Runner, Bodies, Render, MouseConstraint, Mouse} = Matter;
+const {Engine, World, Runner, Bodies, Render, Mouse} = Matter;
 
 const engine = Engine.create();
 const {world} = engine;
+
+const cells = 3;
+const width = 600;
+const height = 600;
 
 const render = Render.create({
   element: document.body, 
   engine:engine,
   options:{
-    wireframes: false,
-    width:800,
-    height:600
+    wireframes: true,
+    width,
+    height
   }
 }); //defined a canvas
 
@@ -17,41 +21,36 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
-World.add(world, MouseConstraint.create(engine, {
-  mouse: Mouse.create(render.canvas)
-}));
-
-const width = 800;
-const height = 600;
-
 //**Walls**//
 const walls = [
-   Bodies.rectangle(400, 0, 800, 20, {
+   Bodies.rectangle(width/2, 0, width, 20, {
+    isStatic: true,
+  }), 
+   Bodies.rectangle(0, height/2, 20, height, {
     isStatic: true,
   }),
-   Bodies.rectangle(0, 400, 20, 800, {
+   Bodies.rectangle(width, height/2, 20, height, {
     isStatic: true,
   }),
-   Bodies.rectangle(800, 300, 20, 600, {
-    isStatic: true,
-  }),
-   Bodies.rectangle(400, 600, 800, 20, {
+   Bodies.rectangle(width/2, height, width, 20, {
     isStatic: true,
   }),
 ];
 
 World.add(world, walls ) //add shape to the World Object
 
-//Random shapes
-for(let i=0; i<32; i++){
-  if (Math.random() > 0.5){
-    World.add(world, 
-      Bodies.rectangle( Math.random()*width, Math.random()*height, 50, 50))
-  } else{
-    World.add(world, 
-      Bodies.circle( Math.random()*width, Math.random()*height, 40, {
-      render: {
-        fillStyle: "blue"
-      }
-      }))
-  }}
+
+const grid = Array(cells).fill([]).map(() => Array(cells).fill(false));
+const verticals = Array(cells).fill([]).map(()=>Array(cells-1).fill(false));
+const horizontals = Array(cells-1).fill([]).map(()=>Array(cells).fill(false));
+
+const firstIndex  = Math.floor(Math.random()*(cells));
+const secondIndex  = Math.floor(Math.random()*(cells));
+
+let startCell = grid[firstIndex][secondIndex]
+console.log (startCell)
+console.log (firstIndex, secondIndex) 
+
+const stepThroughCell = (cells) => {
+  
+}
