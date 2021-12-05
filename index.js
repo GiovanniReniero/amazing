@@ -70,26 +70,55 @@ const stepThroughCell = (row, column) => {
   }
   //mark the cell as being visited
   grid[row][column]=true
-  //assemble randomly assembled-ordered list of neighbours
-  neighbours = shuffle([
-    [row-1, column],
-    [row, column+1],
-    [row, column-1],
-    [row+1, column],
+  //assemble randomly assembled-ordered list of neighbors
+  neighbors = shuffle([
+    [row-1, column, "up"],
+    [row, column+1, "right"],
+    [row, column-1, "left"],
+    [row+1, column, "down"],
   ]);
-  console.log(neighbours)
+  console.log(neighbors)
   //for each neighbour ....
-  
-  // see if the neighbour is out or bounds
-  
-  //if we have visited that neighbour, continue to next neighbour
-  
+  for (let neighbor of neighbors){
+    const[nextRow, nextColumn, direction]= neighbor
+    // see if the neighbour is out or bounds
+    if(nextRow < 0 || 
+      nextColumn < 0 || 
+      nextRow >= cells || 
+      nextColumn >= cells){
+      continue;
+    }
+    //if we have visited that neighbour, continue to next neighbour
+    if(grid[nextRow][nextColumn]){
+      continue;
+    } 
   //Remove a wall from either horizontals or verticals
-  
-  //visit the next cell
-
+    if(direction === "left"){
+      verticals[row][column-1]=true;
+    }
+    else if(direction === "right"){
+      verticals[row][column]=true;
+    }
+    else if(direction === "up"){
+      horizontals[row-1][column]=true;
+    }
+    else if(direction === "down"){
+      horizontals[row][column]=true;
+    }
+    
+    //visit the next cell
+    stepThroughCell(nextRow, nextColumn)    
+  }
 }
 
-// stepThroughCell(firstIndex, secondIndex)
-stepThroughCell(1, 1)
-// console.log (grid)
+stepThroughCell(firstIndex, secondIndex)
+// stepThroughCell(1, 1)
+
+horizontals.forEach((row) => {
+  row.forEach((open, idx) => {
+    if (open){
+      return
+    }
+    const wall = Bodies.rectangle();
+  })
+})
