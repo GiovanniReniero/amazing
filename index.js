@@ -1,11 +1,14 @@
-const {Engine, World, Runner, Bodies, Render, Mouse} = Matter;
+const {Engine, World, Runner, Bodies, Render, Body, Events} = Matter;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0
 const {world} = engine;
 
-const cells = 3;
+const cells = 8;
 const width = 600;
 const height = 600;
+
+const unitLength = width / cells;
 
 const render = Render.create({
   element: document.body, 
@@ -23,16 +26,16 @@ Runner.run(Runner.create(), engine);
 
 //**Walls**//
 const walls = [
-   Bodies.rectangle(width/2, 0, width, 20, {
+   Bodies.rectangle(width/2, 0, width, 2, {
     isStatic: true,
   }), 
-   Bodies.rectangle(0, height/2, 20, height, {
+   Bodies.rectangle(0, height/2, 2, height, {
     isStatic: true,
   }),
-   Bodies.rectangle(width, height/2, 20, height, {
+   Bodies.rectangle(width, height/2, 2, height, {
     isStatic: true,
   }),
-   Bodies.rectangle(width/2, height, width, 20, {
+   Bodies.rectangle(width/2, height, width, 2, {
     isStatic: true,
   }),
 ];
@@ -77,7 +80,7 @@ const stepThroughCell = (row, column) => {
     [row, column-1, "left"],
     [row+1, column, "down"],
   ]);
-  console.log(neighbors)
+  // console.log(neighbors)
   //for each neighbour ....
   for (let neighbor of neighbors){
     const[nextRow, nextColumn, direction]= neighbor
@@ -112,13 +115,111 @@ const stepThroughCell = (row, column) => {
 }
 
 stepThroughCell(firstIndex, secondIndex)
-// stepThroughCell(1, 1)
 
-horizontals.forEach((row) => {
-  row.forEach((open, idx) => {
+horizontals.forEach((row, rowIndex) => {
+  row.forEach((open, columnIndex) => {
     if (open){
       return
     }
-    const wall = Bodies.rectangle();
+    const wallX = Bodies.rectangle(
+      // columnIndex * unitLength + unitLength/2,
+      unitLength*(columnIndex+ 0.5),
+      unitLength*(rowIndex + 1), 
+      // rowIndex * unitLength + unitLength/2, 
+      unitLength,
+       10,
+       {
+        isStatic: true,
+        label: "wall"
+      } 
+    );
+    World.add(world, wallX);
   })
 })
+
+verticals.forEach((row, rowIndex) =>{
+  row.forEach((open, columnIndex) => {
+    if (open){
+      return
+    }
+    const wallY = Bodies.rectangle(
+        unitLength*(columnIndex + 1), 
+        unitLength*(rowIndex + 0.5),
+        10,
+        unitLength,
+       {
+         isStatic: true,
+         label: "wall"
+      });
+    World.add(world, wallY);
+    })
+  })
+
+// Goal
+  const goal = Bodies.rectangle( 
+  unitLength*cells - unitLength/2,   
+  unitLength*cells - unitLength/2,
+  unitLength/2,
+  unitLength/2,
+  { 
+    isStatic: true,
+    label: "goal"
+
+  });
+
+World.add(world, goal);
+
+
+// Ball
+const ball = Bodies.circle(
+  unitLength/2, 
+  unitLength/2, 
+  unitLength*0.3,
+    {
+      label: "ball",
+    }
+  );
+
+  World.add(world, ball)
+
+// Key Handling
+document.addEventListener("keydown", (event) => {
+  const {x, y} = ball.velocity
+
+  if(event.keyCode === 38){
+    Body.setVelocity(ball, {x, y: y-3})
+    console.log("Moving up")
+  };
+  if(event.keyCode === 39){
+    Body.setVelocity(ball, {x: x+3, y})
+    console.log("Moving right")
+  };
+  if(event.keyCode === 40){
+    Body.setVelocity(ball, {x, y: y+3})
+    console.log("Moving down")
+  }; 
+  if(event.keyCode === 37){
+    Body.setVelocity(ball, {x: x-3, y })
+    console.log("Moving left")
+  };
+});
+
+//Win Condition
+Events.on(engine, 'collisionStart', event=>{
+  
+  event.pairs.forEach((collision) => {
+    const labels = ["goal", "ball"];
+    if (labels.includes(collision.bodyA.label) &&
+        labels.includes(collision.bodyB.label)){
+        console.log("Congratulations!");
+        engine.world.gravity.y = 0.8;
+        world.bodies.forEach((body) =>{
+          if(body.label === "wall" ){
+            Body.setStatic(body, false);
+           }
+        })
+        }           
+      
+      }
+    )
+  }); 
