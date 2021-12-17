@@ -15,6 +15,7 @@ Project is created with:
 * HTML 5
 * CSS 
 * Vanilla JavaScript
+* Matter.js 
 
 ## Setup
 * To run simply download code and run on a local server. View on Chrome. 
