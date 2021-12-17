@@ -8,7 +8,7 @@
 * [To Do](#to-do)
 
 ## General info
-This project is simple maze game where a player is invited to steer a ball through a maze and reach a goal.
+Just a simple maze game in which a player is invited to steer a ball through a maze and reach a goal.
 
 ## Technologies
 Project is created with:
