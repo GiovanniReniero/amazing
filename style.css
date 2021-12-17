@@ -1,0 +1,28 @@
+body{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  position: relative;
+}
+
+
+.hidden{
+  display: none !important;
+}
+
+.winner h1{
+  font-size: 4rem;
+  color: yellow;
+ 
+
+}
+
+.winner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+}
