@@ -5,7 +5,6 @@ body{
   position: relative;
 }
 
-
 .hidden{
   display: none !important;
 }
@@ -13,8 +12,6 @@ body{
 .winner h1{
   font-size: 4rem;
   color: yellow;
- 
-
 }
 
 .winner {

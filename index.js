@@ -1,3 +1,6 @@
+
+
+
 const {Engine, World, Runner, Bodies, Render, Body, Events} = Matter;
 
 const engine = Engine.create();
@@ -236,3 +239,5 @@ Events.on(engine, 'collisionStart', event=>{
       }
     )
   }); 
+
+  alert("Hi, welcome to Maze. Please use the arrow keys to move the ball! Don't go too fast or you risk loosing it 😃")
